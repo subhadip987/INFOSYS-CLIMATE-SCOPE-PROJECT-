@@ -119,3 +119,78 @@ Regional and similarity comparisons
 ✅ Fully functional interactive dashboard implementing the analysis
 
 ✅ Visualization-driven storytelling aligned with project objectives
+
+
+
+
+
+
+
+Milestone 3 – Climate Intelligence Dashboard
+
+Project: ClimateScope – Weather Analytics Web App
+Duration: Weeks 5–6
+
+Streamlit App:
+https://27nnentrsesjttuvl8na2s.streamlit.app/
+
+🎯 Objective
+
+Milestone 3 focuses on building an advanced interactive climate intelligence dashboard that integrates statistical analysis, visualization, and comparative climate insights into a single user-friendly web application.
+
+🔬 Key Features
+
+📊 Climate Analytics
+
+KPI cards for temperature, wind speed, humidity, pressure, and other weather metrics
+
+Statistical metrics including Mean, Skewness, IQR, and Standard Deviation
+
+Climate Risk Index for evaluating environmental conditions
+
+📈 Visualization & Insights
+
+Monthly temperature trend charts
+
+Seasonal radar analysis
+
+Wind rose and wind-temperature correlation plots
+
+Extreme weather identification (hottest and coldest days)
+
+Feature correlation heatmap
+
+🌍 Comparative Analysis
+
+Multi-country regional comparison
+
+Time-series overlay for climate trends
+
+Climate Similarity Index to compare countries
+
+🗺️ Global Climate Map
+
+Interactive world map visualization
+
+Country-level climate metric exploration
+
+🖥️ Dashboard Experience
+
+Clean modern UI built with Streamlit
+
+Interactive controls for:
+
+Country selection
+
+Metric selection
+
+Analysis mode (Single / Regional / Similarity / Global Map)
+
+Modular dashboard sections for easy navigation
+
+📦 Deliverables
+
+✅ Fully functional interactive climate intelligence dashboard
+✅ Advanced data visualization and analytics
+✅ Comparative climate analysis tools
+✅ Interactive global climate exploration
