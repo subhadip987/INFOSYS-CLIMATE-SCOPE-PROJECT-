@@ -1,7 +1,6 @@
 streamlit
 pandas
-plotly
-numpy
 numpy
 plotly
 matplotlib
+streamlit-autorefresh
