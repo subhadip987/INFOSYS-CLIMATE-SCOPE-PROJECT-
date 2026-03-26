@@ -35,12 +35,11 @@ if "alert_dismissed" not in st.session_state:
 # UTILITY: Hex color -> rgba string
 # --------------------------------------------------
 def hex_to_rgba(hex_color, alpha=0.27):
-    """Convert '#rrggbb' to 'rgba(r,g,b,alpha)'."""
     h = hex_color.lstrip('#')
     if len(h) == 6:
         r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
         return f"rgba({r},{g},{b},{alpha})"
-    return hex_color  # fallback: return as-is
+    return hex_color
 
 # --------------------------------------------------
 # GLOBAL CSS — Glassmorphism + 3D card press effects
@@ -48,14 +47,6 @@ def hex_to_rgba(hex_color, alpha=0.27):
 GLOBAL_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
-
-/* Password masking font fallback */
-@font-face {
-  font-family: 'password';
-  src: local('Arial');
-  unicode-range: U+0021-007E;
-  size-adjust: 120%;
-}
 
 :root {
   --primary: #00d4ff;
@@ -76,7 +67,7 @@ html, body, .stApp {
   color: var(--text) !important;
 }
 
-/* ---- STREAMLIT TOP HEADER / TOOLBAR — dark glassmorphism ---- */
+/* ---- STREAMLIT TOP HEADER ---- */
 [data-testid="stHeader"],
 header[data-testid="stHeader"],
 .stAppHeader,
@@ -92,7 +83,6 @@ header.stAppHeader {
   box-shadow: 0 2px 24px rgba(0,0,0,0.5), 0 0 40px rgba(123,47,255,0.08) !important;
 }
 
-/* Toolbar icons (share, star, pencil, github) */
 [data-testid="stHeader"] button,
 [data-testid="stHeader"] a,
 [data-testid="stToolbar"] button,
@@ -111,16 +101,11 @@ header.stAppHeader {
   opacity: 1 !important;
 }
 
-/* Streamlit top-right deploy/menu button */
-[data-testid="stToolbar"],
-#MainMenu {
+[data-testid="stToolbar"], #MainMenu {
   color: #8892a4 !important;
 }
-#MainMenu button {
-  color: #8892a4 !important;
-}
+#MainMenu button { color: #8892a4 !important; }
 
-/* Animated gradient line under header */
 [data-testid="stHeader"]::after,
 .stAppHeader::after {
   content: '';
@@ -136,7 +121,6 @@ header.stAppHeader {
   100% { background-position: 200% 0%; }
 }
 
-/* Main content area top padding so content doesn't hide under header */
 .main .block-container {
   padding-top: 1rem !important;
 }
@@ -153,7 +137,6 @@ header.stAppHeader {
   z-index: 0;
   animation: meshPulse 12s ease-in-out infinite alternate;
 }
-
 @keyframes meshPulse {
   0%   { opacity: 0.7; }
   100% { opacity: 1; }
@@ -169,6 +152,104 @@ header.stAppHeader {
 [data-testid="stSidebar"] p {
   color: var(--text) !important;
 }
+
+/* ================================================================
+   GLOBAL INPUT FIX — dark bg + light text everywhere
+   ================================================================ */
+/* Target ALL streamlit text inputs universally */
+.stTextInput > div > div,
+.stTextInput > div > div > div,
+.stTextInput input,
+.stTextInput > div > div > input,
+div[data-baseweb="input"],
+div[data-baseweb="input"] > div,
+div[data-baseweb="base-input"],
+div[data-baseweb="base-input"] > input {
+  background-color: rgba(15, 20, 40, 0.9) !important;
+  background: rgba(15, 20, 40, 0.9) !important;
+  color: #e8eaf6 !important;
+  border-color: rgba(0, 212, 255, 0.25) !important;
+  caret-color: #00d4ff !important;
+}
+
+/* The actual <input> element */
+input[type="text"],
+input[type="email"],
+input[type="search"],
+input[type="password"],
+input:not([type]) {
+  background-color: rgba(15, 20, 40, 0.9) !important;
+  background: rgba(15, 20, 40, 0.9) !important;
+  color: #e8eaf6 !important;
+  caret-color: #00d4ff !important;
+  border-color: rgba(0, 212, 255, 0.25) !important;
+  -webkit-text-fill-color: #e8eaf6 !important;
+}
+
+/* Autofill override — browsers force yellow background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px rgba(15, 20, 40, 0.95) inset !important;
+  box-shadow: 0 0 0 1000px rgba(15, 20, 40, 0.95) inset !important;
+  -webkit-text-fill-color: #e8eaf6 !important;
+  caret-color: #00d4ff !important;
+  border-color: rgba(0, 212, 255, 0.4) !important;
+}
+
+/* Placeholder text */
+input::placeholder,
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+  color: #4a5568 !important;
+  opacity: 1 !important;
+}
+
+/* Focus state */
+input:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+div[data-baseweb="base-input"]:focus-within,
+div[data-baseweb="input"]:focus-within {
+  border-color: rgba(0, 212, 255, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.12) !important;
+  outline: none !important;
+}
+
+/* Labels */
+.stTextInput label,
+.stTextInput > label {
+  color: #8892a4 !important;
+  font-size: 12px !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  font-family: 'DM Sans', sans-serif !important;
+}
+
+/* Password show/hide eye button */
+.stTextInput > div > div > button,
+button[aria-label="Show password text"],
+button[aria-label="Hide password text"] {
+  background: transparent !important;
+  border: none !important;
+  color: #8892a4 !important;
+  cursor: pointer !important;
+}
+.stTextInput > div > div > button:hover {
+  color: #00d4ff !important;
+}
+
+/* Selectbox & textarea also dark */
+.stSelectbox > div > div,
+.stTextArea textarea {
+  background: rgba(15, 20, 40, 0.9) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 10px !important;
+}
+
+/* ================================================================ */
 
 .kpi-card {
   background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%);
@@ -342,7 +423,6 @@ header.stAppHeader {
   display: inline-block;
 }
 
-/* ---- WEATHER TICKER ---- */
 .weather-ticker-wrap {
   overflow: hidden;
   background: rgba(0,212,255,0.06);
@@ -365,7 +445,6 @@ header.stAppHeader {
   100% { transform: translateX(-100%); }
 }
 
-/* ---- ALERT BANNER ---- */
 .alert-banner {
   background: linear-gradient(135deg, rgba(255,107,107,0.15), rgba(255,211,61,0.08));
   border: 1px solid rgba(255,107,107,0.4);
@@ -382,7 +461,6 @@ header.stAppHeader {
   50%       { border-color: rgba(255,107,107,0.8); box-shadow: 0 0 18px rgba(255,107,107,0.2); }
 }
 
-/* ---- STAT MINI CARDS ---- */
 .stat-mini {
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
@@ -403,7 +481,6 @@ header.stAppHeader {
   text-transform: uppercase;
 }
 
-/* ---- FEATURE BADGE ---- */
 .feature-badge {
   display: inline-flex;
   align-items: center;
@@ -419,61 +496,6 @@ header.stAppHeader {
   letter-spacing: 0.5px;
 }
 
-.stSelectbox > div > div,
-.stTextInput > div > div > input,
-.stTextArea textarea {
-  background: rgba(255,255,255,0.05) !important;
-  border: 1px solid var(--border) !important;
-  color: var(--text) !important;
-  border-radius: 10px !important;
-}
-
-/* ---- PASSWORD FIELD — always mask characters ---- */
-input[type="password"],
-.stTextInput > div > div > input[type="password"] {
-  -webkit-text-security: disc !important;
-  text-security: disc !important;
-  font-family: 'password', monospace !important;
-  letter-spacing: 4px !important;
-  color: var(--text) !important;
-}
-
-/* ---- LOGIN PAGE INPUT STYLING ---- */
-.login-glass-card .stTextInput > div > div > input {
-  background: rgba(255,255,255,0.07) !important;
-  border: 1px solid rgba(0,212,255,0.25) !important;
-  color: #e8eaf6 !important;
-  border-radius: 10px !important;
-  padding: 10px 14px !important;
-  font-size: 14px !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
-}
-.login-glass-card .stTextInput > div > div > input:focus {
-  border-color: rgba(0,212,255,0.6) !important;
-  box-shadow: 0 0 0 3px rgba(0,212,255,0.12) !important;
-  outline: none !important;
-}
-.login-glass-card .stTextInput label {
-  color: #8892a4 !important;
-  font-size: 12px !important;
-  letter-spacing: 1px !important;
-  text-transform: uppercase !important;
-}
-
-/* Streamlit's show/hide eye icon — keep it visible */
-.stTextInput > div > div > div[data-testid="InputInstructions"],
-.stTextInput button[kind="secondaryFormSubmit"] {
-  color: #8892a4 !important;
-}
-.stTextInput > div > div > button {
-  background: transparent !important;
-  border: none !important;
-  color: #8892a4 !important;
-  cursor: pointer !important;
-}
-.stTextInput > div > div > button:hover {
-  color: #00d4ff !important;
-}
 .stDataFrame { border-radius: 12px; overflow: hidden; }
 [data-testid="stMetricValue"] { color: var(--primary) !important; font-family: 'Syne', sans-serif !important; }
 [data-testid="stMetricLabel"] { color: var(--text-muted) !important; font-size: 11px !important; letter-spacing: 1px; }
@@ -501,20 +523,17 @@ button[data-testid="stDownloadButton"] > div,
 </style>
 """
 
-# Login page animated background CSS with weather images slideshow
+# Login page CSS
 LOGIN_BG_CSS = """
 <style>
-/* Full-page animated weather background slideshow */
 .login-bg-overlay {
   position: fixed;
   inset: 0;
   z-index: -2;
   background-size: cover;
   background-position: center;
-  animation: bgFade 10s ease-in-out infinite;
 }
 
-/* Particle rain effect */
 .rain-container {
   position: fixed;
   inset: 0;
@@ -529,7 +548,6 @@ LOGIN_BG_CSS = """
   background: linear-gradient(180deg, rgba(0,212,255,0), rgba(0,212,255,0.6));
   animation: rain linear infinite;
 }
-
 @keyframes rain {
   0%   { transform: translateY(-100px); opacity: 0; }
   10%  { opacity: 1; }
@@ -537,7 +555,6 @@ LOGIN_BG_CSS = """
   100% { transform: translateY(110vh); opacity: 0; }
 }
 
-/* Dark vignette overlay */
 .login-vignette {
   position: fixed;
   inset: 0;
@@ -548,7 +565,6 @@ LOGIN_BG_CSS = """
   pointer-events: none;
 }
 
-/* Floating weather particles */
 @keyframes floatUp {
   0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0.7; }
   50%  { transform: translateY(-60px) translateX(20px) scale(1.1); opacity: 1; }
@@ -562,9 +578,11 @@ LOGIN_BG_CSS = """
   z-index: 0;
 }
 
-/* Login card glass */
+/* ================================================================
+   LOGIN CARD INPUT OVERRIDES — highest specificity
+   ================================================================ */
 .login-glass-card {
-  background: rgba(10, 14, 26, 0.72);
+  background: rgba(10, 14, 26, 0.85);
   backdrop-filter: blur(28px) saturate(1.4);
   -webkit-backdrop-filter: blur(28px) saturate(1.4);
   border: 1px solid rgba(0,212,255,0.18);
@@ -585,7 +603,6 @@ LOGIN_BG_CSS = """
   border-radius: 28px 28px 0 0;
 }
 
-/* Slideshow bg images via JS injection */
 #weather-bg-img {
   position: fixed;
   inset: 0;
@@ -596,7 +613,6 @@ LOGIN_BG_CSS = """
   opacity: 1;
 }
 
-/* Stats strip at bottom of login */
 .login-stats-strip {
   display: flex;
   gap: 16px;
@@ -617,33 +633,84 @@ LOGIN_BG_CSS = """
 }
 .login-stat-pill span { color: #00d4ff; font-weight: 700; }
 
-/* ---- HARD OVERRIDE: password fields on login page ---- */
-input[type="password"] {
-  -webkit-text-security: disc !important;
-  text-security: disc !important;
-  letter-spacing: 6px !important;
-  font-size: 18px !important;
+/* ================================================================
+   NUCLEAR INPUT OVERRIDE — forces dark bg + light text on ALL inputs
+   Must be at end of <style> for highest cascade priority
+   ================================================================ */
+input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea,
+select,
+.stTextInput input,
+.stTextInput > div > div > input,
+div[data-baseweb="base-input"] input,
+div[data-baseweb="input"] input {
+  background-color: rgba(10, 15, 35, 0.95) !important;
+  background: rgba(10, 15, 35, 0.95) !important;
   color: #e8eaf6 !important;
-  background: rgba(255,255,255,0.07) !important;
-  border: 1px solid rgba(0,212,255,0.25) !important;
+  -webkit-text-fill-color: #e8eaf6 !important;
+  caret-color: #00d4ff !important;
+  border-color: rgba(0, 212, 255, 0.3) !important;
   border-radius: 10px !important;
+  font-size: 14px !important;
+  font-family: 'DM Sans', sans-serif !important;
 }
-input[type="password"]::placeholder {
-  letter-spacing: 1px !important;
-  font-size: 13px !important;
+
+/* Wrapper containers also dark */
+div[data-baseweb="base-input"],
+div[data-baseweb="input"],
+div[data-baseweb="input"] > div {
+  background-color: rgba(10, 15, 35, 0.95) !important;
+  background: rgba(10, 15, 35, 0.95) !important;
 }
-/* Username / text inputs on login */
-input[type="text"] {
-  color: #e8eaf6 !important;
-  background: rgba(255,255,255,0.07) !important;
-  border: 1px solid rgba(0,212,255,0.25) !important;
-  border-radius: 10px !important;
-}
-input[type="text"]:focus,
-input[type="password"]:focus {
-  border-color: rgba(0,212,255,0.6) !important;
-  box-shadow: 0 0 0 3px rgba(0,212,255,0.12) !important;
+
+input::placeholder { color: rgba(136, 146, 164, 0.7) !important; opacity: 1 !important; }
+input:focus {
+  border-color: rgba(0, 212, 255, 0.65) !important;
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15), 0 0 12px rgba(0, 212, 255, 0.1) !important;
   outline: none !important;
+}
+
+/* Autofill — prevent white flash */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px rgba(10, 15, 35, 0.98) inset !important;
+  -webkit-text-fill-color: #e8eaf6 !important;
+  caret-color: #00d4ff !important;
+  border-color: rgba(0, 212, 255, 0.4) !important;
+}
+
+/* Streamlit input label overrides */
+.stTextInput label,
+[data-testid="stTextInput"] label {
+  color: #8892a4 !important;
+  font-size: 11px !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+  margin-bottom: 4px !important;
+}
+
+/* Show/hide eye icon */
+.stTextInput button {
+  background: transparent !important;
+  border: none !important;
+  color: #8892a4 !important;
+}
+.stTextInput button:hover { color: #00d4ff !important; }
+
+/* Tab styling on login */
+button[data-testid="stTab"] {
+  color: #8892a4 !important;
+  background: transparent !important;
+}
+button[data-testid="stTab"][aria-selected="true"] {
+  color: #00d4ff !important;
+  border-bottom: 2px solid #00d4ff !important;
 }
 </style>
 """
@@ -1037,7 +1104,6 @@ def violin_box_panel(df, country):
         with c1: st.plotly_chart(fig_vio, use_container_width=True)
         with c2: st.plotly_chart(fig_box, use_container_width=True)
 
-    # Quick stats summary strip
     q1  = cdf[vb_metric].quantile(0.25)
     med = cdf[vb_metric].median()
     q3  = cdf[vb_metric].quantile(0.75)
@@ -1058,7 +1124,7 @@ def violin_box_panel(df, country):
 
 
 # --------------------------------------------------
-# CLIMATE FINGERPRINT (Radar + Percentile)
+# CLIMATE FINGERPRINT
 # --------------------------------------------------
 def climate_fingerprint(df, country):
     section_header("🫆", "Climate Fingerprint")
@@ -1104,7 +1170,7 @@ def climate_fingerprint(df, country):
 
 
 # --------------------------------------------------
-# HEATWAVE CALENDAR HEATMAP
+# HEATWAVE CALENDAR
 # --------------------------------------------------
 def heatwave_calendar(df, country):
     section_header("🔥", "Heatwave Calendar")
@@ -1272,31 +1338,6 @@ def auth_page():
     <div class="login-vignette"></div>
     <div class="rain-container">{rain_drops}</div>
     {particles}
-    <script>
-    // Force password masking — runs after Streamlit renders inputs
-    function enforcePasswordMasking() {{
-        const inputs = window.parent.document.querySelectorAll('input');
-        inputs.forEach(inp => {{
-            const label = inp.closest('[data-testid="stTextInput"]');
-            if (label) {{
-                const labelText = label.querySelector('label');
-                if (labelText && (
-                    labelText.textContent.toLowerCase().includes('password') ||
-                    labelText.textContent.toLowerCase().includes('confirm')
-                )) {{
-                    inp.setAttribute('type', 'password');
-                    inp.style.letterSpacing = '6px';
-                    inp.style.fontSize = '18px';
-                }}
-            }}
-        }});
-    }}
-    // Run immediately and after short delays for Streamlit's async render
-    enforcePasswordMasking();
-    setTimeout(enforcePasswordMasking, 300);
-    setTimeout(enforcePasswordMasking, 800);
-    setTimeout(enforcePasswordMasking, 1500);
-    </script>
     """, unsafe_allow_html=True)
 
     st_autorefresh(interval=1000, key="auth_time")
@@ -1330,8 +1371,8 @@ def auth_page():
 
         tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
         with tab1:
-            username = st.text_input("Username", placeholder="Enter username", key="login_user")
-            password = st.text_input("Password", type="password", placeholder="Enter password", key="login_pass")
+            username = st.text_input("Username", placeholder="Enter your username", key="login_user")
+            password = st.text_input("Password", type="password", placeholder="Enter your password", key="login_pass")
             if st.button("Login →", use_container_width=True):
                 if username in st.session_state.users and \
                    st.session_state.users[username]["password"] == password:
@@ -1677,31 +1718,22 @@ def single_country_view(df, metric):
         violin_box_panel(df, country)
         st.divider()
 
-        # ── Multi-metric box comparison — FIXED fillcolor ──
         section_header("📦", "Multi-Metric Box Comparison")
         num_metrics = [c for c in cdf.select_dtypes(include=np.number).columns
                        if c not in ['month','lat','lon']]
         sel_metrics = st.multiselect("Pick Metrics to Compare", num_metrics,
                                      default=num_metrics[:min(4, len(num_metrics))], key="box_multi")
         if sel_metrics:
-            # Palette of hex colors — converted to proper rgba for fillcolor
             palette = ['#00d4ff', '#7b2fff', '#ff6b6b', '#ffd93d', '#06d6a0', '#f72585']
             fig_mbox = go.Figure()
             for i, m in enumerate(sel_metrics):
                 line_col = palette[i % len(palette)]
-                fill_col = hex_to_rgba(line_col, alpha=0.27)   # ← THE FIX
+                fill_col = hex_to_rgba(line_col, alpha=0.27)
                 fig_mbox.add_trace(go.Box(
-                    y=cdf[m],
-                    name=m,
-                    boxmean='sd',
-                    marker_color=line_col,
-                    line_color=line_col,
-                    fillcolor=fill_col,          # ← proper rgba string
+                    y=cdf[m], name=m, boxmean='sd',
+                    marker_color=line_col, line_color=line_col, fillcolor=fill_col,
                 ))
-            fig_mbox.update_layout(
-                title="Multi-Metric Box Comparison (with Mean & SD)",
-                **dark_theme()
-            )
+            fig_mbox.update_layout(title="Multi-Metric Box Comparison (with Mean & SD)", **dark_theme())
             st.plotly_chart(fig_mbox, use_container_width=True)
 
     with tab3:
