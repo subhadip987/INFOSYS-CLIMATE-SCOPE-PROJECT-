@@ -76,6 +76,71 @@ html, body, .stApp {
   color: var(--text) !important;
 }
 
+/* ---- STREAMLIT TOP HEADER / TOOLBAR — dark glassmorphism ---- */
+[data-testid="stHeader"],
+header[data-testid="stHeader"],
+.stAppHeader,
+header.stAppHeader {
+  background: linear-gradient(90deg,
+    rgba(10,14,26,0.98) 0%,
+    rgba(20,10,40,0.96) 40%,
+    rgba(0,30,45,0.96) 70%,
+    rgba(10,14,26,0.98) 100%) !important;
+  backdrop-filter: blur(20px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+  border-bottom: 1px solid rgba(0,212,255,0.15) !important;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.5), 0 0 40px rgba(123,47,255,0.08) !important;
+}
+
+/* Toolbar icons (share, star, pencil, github) */
+[data-testid="stHeader"] button,
+[data-testid="stHeader"] a,
+[data-testid="stToolbar"] button,
+[data-testid="stToolbar"] a,
+.stAppHeader button,
+.stAppHeader a {
+  color: #8892a4 !important;
+  opacity: 0.8 !important;
+  transition: color 0.2s, opacity 0.2s !important;
+}
+[data-testid="stHeader"] button:hover,
+[data-testid="stHeader"] a:hover,
+.stAppHeader button:hover,
+.stAppHeader a:hover {
+  color: #00d4ff !important;
+  opacity: 1 !important;
+}
+
+/* Streamlit top-right deploy/menu button */
+[data-testid="stToolbar"],
+#MainMenu {
+  color: #8892a4 !important;
+}
+#MainMenu button {
+  color: #8892a4 !important;
+}
+
+/* Animated gradient line under header */
+[data-testid="stHeader"]::after,
+.stAppHeader::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #7b2fff, #00d4ff, #ff6b6b, #7b2fff);
+  background-size: 200% 100%;
+  animation: headerGlow 4s linear infinite;
+}
+@keyframes headerGlow {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+/* Main content area top padding so content doesn't hide under header */
+.main .block-container {
+  padding-top: 1rem !important;
+}
+
 .stApp::before {
   content: '';
   position: fixed;
